@@ -3,7 +3,7 @@
 export default {
   version: 'v1.0.0',
   worker: {
-    stable: '', // 例：https://pogo-calendar.<帳號>.workers.dev
-    test: '',   // 例：https://pogo-calendar-test.<帳號>.workers.dev
+    stable: 'https://pogo-calendar.h8297leo-pogo.workers.dev',
+    test: 'https://pogo-calendar-test.h8297leo-pogo.workers.dev',
   },
 };
