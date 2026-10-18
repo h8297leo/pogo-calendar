@@ -1,0 +1,33 @@
+# Cloudflare Worker 設定
+# 部署：
+#   cd v1.0.0/worker
+#   npx wrangler kv namespace create TRACKS              → 把 id 填到下面 [[kv_namespaces]]
+#   npx wrangler kv namespace create TRACKS --env test   → 把 id 填到 [[env.test.kv_namespaces]]
+#   npx wrangler deploy --env test    （測試版用）
+#   npx wrangler deploy               （正式版用）
+# 部署後把 workers.dev 網址填到 ../site/config.js
+#
+# <GITHUB_USER> 請換成 GitHub 帳號（小寫）
+
+name = "pogo-calendar"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+EVENTS_URL = "https://<GITHUB_USER>.github.io/pogo-calendar/data/events.json"
+ALLOWED_ORIGIN = "https://<GITHUB_USER>.github.io"
+
+[[kv_namespaces]]
+binding = "TRACKS"
+id = "<PRODUCTION_KV_ID>"
+
+[env.test]
+name = "pogo-calendar-test"
+
+[env.test.vars]
+EVENTS_URL = "https://<GITHUB_USER>.github.io/pogo-calendar/v1.0.0/data/events.json"
+ALLOWED_ORIGIN = "https://<GITHUB_USER>.github.io"
+
+[[env.test.kv_namespaces]]
+binding = "TRACKS"
+id = "<TEST_KV_ID>"

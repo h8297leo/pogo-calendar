@@ -1,0 +1,9 @@
+_site/
+node_modules/
+.wrangler/
+.dev.vars
+# build 產物（部署時由 GitHub Actions 產生）
+v*/site/data/
+v*/site/cal/
+v*/site/assets/core.mjs
+v*/data/zh-names.json

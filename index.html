@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokemon GO 活動曆</title>
+  <meta name="description" content="Pokemon GO 活動一覽與 iPhone 行事曆同步（非官方）">
+  <style>
+    :root { --bg: #fbf8f3; --ink: #1f2030; --ink-2: #6b6d7c; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #16171c; --ink: #f1f0ee; --ink-2: #a5a7b2; } }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--ink);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; padding: 16px; text-align: center; }
+    a { color: inherit; } p { color: var(--ink-2); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Pokemon GO 活動曆</h1>
+    <p id="msg">正在前往最新版本…</p>
+    <noscript><p><a href="versions.html">查看所有版本</a></p></noscript>
+  </main>
+  <script>
+    // 導向 status=stable 的版本；沒有正式版時導向最新的測試版
+    (async () => {
+      const msg = document.getElementById('msg');
+      try {
+        const versions = await (await fetch('versions.json', { cache: 'no-store' })).json();
+        const n = (v) => v.replace(/^v/, '').split('.').map(Number);
+        const newer = (a, b) => { const x = n(a.version), y = n(b.version); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return y[i] - x[i]; return 0; };
+        const target = versions.find((v) => v.status === 'stable') || versions.filter((v) => v.status === 'test').sort(newer)[0];
+        if (!target) throw new Error('no version');
+        location.replace(target.version + '/' + location.search + location.hash);
+      } catch {
+        msg.innerHTML = '找不到可用版本，<a href="versions.html">查看所有版本</a>';
+      }
+    })();
+  </script>
+</body>
+</html>

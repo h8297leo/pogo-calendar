@@ -1,0 +1,53 @@
+name: 建置並部署 GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"   # 每 6 小時更新活動資料（UTC）
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 快取中文名對照
+        uses: actions/cache@v4
+        with:
+          path: v*/data/zh-names.json
+          key: zh-names-${{ github.run_id }}
+          restore-keys: zh-names-
+      - name: 建置所有版本並驗證 ICS
+        run: node tools/assemble.mjs
+      - name: Worker 單元測試
+        run: |
+          for v in v*/; do
+            if [ -f "$v/test/worker.test.mjs" ]; then (cd "$v" && node test/worker.test.mjs); fi
+          done
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
