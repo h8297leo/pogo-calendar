@@ -1,0 +1,12 @@
+{
+  "name": "pogo-calendar-v1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "validate": "node scripts/validate-ics.mjs",
+    "test": "node scripts/build.mjs --input test/fixture-events.json --names test/names-sample.json --offline && node scripts/validate-ics.mjs && node test/worker.test.mjs",
+    "deploy:worker:test": "cd worker && npx wrangler deploy --env test",
+    "deploy:worker": "cd worker && npx wrangler deploy"
+  }
+}
