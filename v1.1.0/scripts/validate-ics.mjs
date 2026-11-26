@@ -22,12 +22,19 @@ export function validateIcs(text) {
   if (!text.endsWith('\r\n')) errors.push('檔案未以 CRLF 結尾');
   const lines = text.split('\r\n');
   if (lines.at(-1) === '') lines.pop();
+  lines.forEach((line, i) => {
+    if (enc.encode(line).length > 75) errors.push(`第 ${i + 1} 行超過 75 octets`);
+  });
+  // 先展開折行（以空白開頭的續行接回上一行），再檢查內容，長 UID 才不會只比到第一段
+  const logical = [];
+  lines.forEach((line, i) => {
+    if (line.startsWith(' ') && logical.length) logical.at(-1).text += line.slice(1);
+    else logical.push({ text: line, i });
+  });
   const stack = [];
   const uids = new Set();
   let cur = null;
-  lines.forEach((line, i) => {
-    if (enc.encode(line).length > 75) errors.push(`第 ${i + 1} 行超過 75 octets`);
-    if (line.startsWith(' ')) return;
+  logical.forEach(({ text: line, i }) => {
     const [key] = line.split(':');
     if (key === 'BEGIN') {
       const v = line.slice(6);
