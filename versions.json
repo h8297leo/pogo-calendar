@@ -1,5 +1,6 @@
 [
   { "version": "v1.0.0", "status": "archived", "date": "2026-10-18", "notes": "第一版：活動分頁、寶可夢圖卡、分類訂閱、個人追蹤同步" },
   { "version": "v1.1.0", "status": "archived", "date": "2026-11-26", "notes": "活動名稱與加成改為台灣中文、寶貝球主畫面圖示" },
-  { "version": "v1.1.1", "status": "stable", "date": "2026-11-26", "notes": "所有活動名稱與加成說明都翻成台灣中文（依官方繁中名稱）" }
+  { "version": "v1.1.1", "status": "archived", "date": "2026-11-26", "notes": "所有活動名稱與加成說明都翻成台灣中文（依官方繁中名稱）" },
+  { "version": "v1.1.2", "status": "stable", "date": "2026-11-26", "notes": "寶可夢圖卡的形態名稱也改為中文" }
 ]
